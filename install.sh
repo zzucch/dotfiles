@@ -17,7 +17,7 @@ if ! command -v stow &>/dev/null; then
 	exit 1
 fi
 
-find . -maxdepth 1 -not -name ".*" ! -name "files" -type d |
+find . -maxdepth 1 -not -name ".*" -type d |
 	while read -r dotfile; do
 		# Remove the leading "./"
 		dotfile=$(basename "$dotfile")
