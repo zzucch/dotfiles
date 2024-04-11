@@ -9,7 +9,7 @@ echo
 if [[ $REPLY =~ ^[Yy]$ ]]; then
 	echo "Updating dotfiles..."
 	git pull
-	git submodule update
+	git submodule update --remote
 fi
 
 if ! command -v stow &>/dev/null; then
