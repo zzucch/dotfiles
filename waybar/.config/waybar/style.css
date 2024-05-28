@@ -114,8 +114,5 @@ tooltip {
 
 #battery.plugged {
   transition: all 1s ease-in-out;
-  background: radial-gradient(
-    /* 60deg, */ rgba(33, 234, 150, 0.5),
-    transparent /* rgba(170, 170, 170,0.2) */
-  );
+  background: radial-gradient(rgba(33, 234, 150, 0.5), transparent);
 }
