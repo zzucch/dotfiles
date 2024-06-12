@@ -14,3 +14,4 @@ PS1=' \W \$ '
 export GPG_TTY=$(tty)
 
 export PATH="$PATH:/home/zcchr/.cargo/bin"
+export PATH="$PATH:/home/zcchr/.config/emacs/bin"
