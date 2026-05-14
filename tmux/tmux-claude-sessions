@@ -1,0 +1,54 @@
+#!/usr/bin/env bash
+
+windows=$(tmux list-windows -a -F $'#{session_name}\t#{window_index}\t#{window_name}' 2>/dev/null | grep -i 'claude')
+
+if [[ -z "$windows" ]]; then
+    echo "no claude code sessions found"
+    exit 0
+fi
+
+check_status() {
+    local session=$1
+    output=$(tmux capture-pane -t "$session" -p 2>/dev/null)
+    if echo "$output" | grep -qE '[·✢✳✶✽]'; then
+        echo "DEBUG: $session -> working" >&2
+        echo "working"
+    elif echo "$output" | grep -qE '[⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏]'; then
+        echo "DEBUG: $session -> working" >&2
+        echo "working"
+    elif echo "$output" | grep -q '∴'; then
+        echo "DEBUG: $session -> working" >&2
+        echo "working"
+    else
+        echo "DEBUG: $session -> idle" >&2
+        echo "idle"
+    fi
+}
+
+list=""
+while IFS=$'\t' read -r session window_index window_name; do
+    [[ -z "$session" ]] && continue
+    session_window="$session:$window_index"
+    status=$(check_status "$session_window")
+    list="$list$session_window"$'\t'"$status"$'\n'
+done <<< "$windows"
+
+selected=$(echo "$list" | grep -v '^$' | awk -F'\t' '{
+    if ($2 == "working") {
+        printf "\033[32m%s\033[0m\n", $1
+    } else {
+        printf "\033[38;5;208m%s\033[0m\n", $1
+    }
+}' | fzf --ansi --preview 'echo {} | sed "s/\x1b\[[0-9;]*m//g" | xargs -I{} tmux capture-pane -t {} -p 2>/dev/null | tail -20' --preview-window=up:60%)
+
+selected=$(echo "$selected" | sed 's/\x1b\[[0-9;]*m//g')
+
+if [[ -z "$selected" ]]; then
+    exit 0
+fi
+
+if [[ -z $TMUX ]]; then
+    tmux attach-session -t "$selected"
+else
+    tmux switch-client -t "$selected"
+fi
