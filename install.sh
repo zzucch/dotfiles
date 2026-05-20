@@ -4,19 +4,22 @@ script_dir=$(dirname "$0")
 
 cd "$script_dir" || exit 1
 
+skip_update=false
 if [[ "${1:-}" == "-n" || "${1:-}" == "--no" ]]; then
-	echo "skipping update"
-	exit 0
+	skip_update=true
+	echo "(skipping dotfiles update)"
 fi
 
-if ! command -v git &>/dev/null; then
-	echo "git could not be found, but is needed. install it and try again."
-	exit 1
-fi
+if ! $skip_update; then
+	if ! command -v git &>/dev/null; then
+		echo "git could not be found, but is needed. install it and try again."
+		exit 1
+	fi
 
-echo "updating dotfiles..."
-git pull
-git submodule update --remote
+	echo "updating dotfiles..."
+	git pull
+	git submodule update --remote
+fi
 
 if ! command -v stow &>/dev/null; then
 	echo "stow could not be found, but is needed. install it and try again."
