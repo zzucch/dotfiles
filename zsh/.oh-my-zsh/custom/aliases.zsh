@@ -48,8 +48,26 @@ alias mgm="make generate-mocks";
 
 alias dsaa="docker stop \$(docker ps -a -q)"
 alias draa="docker rm \$(docker ps -a -q)"
-alias dsa="docker stop \$(docker ps -q | xargs -I {} sh -c 'docker inspect --format \"{{.Config.Image}}\" {} 2>/dev/null | grep -q \"claude\" || echo {}')"
-alias dra="docker rm -f \$(docker ps -a -q | xargs -I {} sh -c 'docker inspect --format \"{{.Config.Image}}\" {} 2>/dev/null | grep -q \"claude\" || echo {}')"
+alias dsa="docker ps -q | while read id; do \
+  image=\$(docker inspect --format '{{.Config.Image}}' \$id 2>/dev/null); \
+  name=\$(docker inspect --format '{{.Name}}' \$id 2>/dev/null | sed 's/\///'); \
+  if echo \"\$image\" | grep -qi 'claude' || echo \"\$name\" | grep -qi 'claude\|sidecar'; then \
+    echo \"skip \$name\"; \
+  else \
+    echo \"Stopping \$name\"; \
+    docker stop \$id; \
+  fi; \
+done"
+alias dra="docker ps -a -q | while read id; do \
+  image=\$(docker inspect --format '{{.Config.Image}}' \$id 2>/dev/null); \
+  name=\$(docker inspect --format '{{.Name}}' \$id 2>/dev/null | sed 's/\///'); \
+  if echo \"\$image\" | grep -qi 'claude' || echo \"\$name\" | grep -qi 'claude\|sidecar'; then \
+    echo \"skip \$name\"; \
+  else \
+    echo \"Removing \$name\"; \
+    docker rm -f \$id; \
+  fi; \
+done"
 
 alias alert="print '\a'"
 
