@@ -3,6 +3,8 @@
 alias n="nvim .";
 alias cx='codex'
 
+export LESS="${LESS:+$LESS }--mouse"
+
 alias ga='git add -A'
 alias gc='git commit -m'
 alias gcm='git commit -m'
