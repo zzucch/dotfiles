@@ -1,6 +1,7 @@
 #!/usr/bin/env zsh
 
 alias n="nvim .";
+alias cx='codex'
 
 alias ga='git add -A'
 alias gc='git commit -m'

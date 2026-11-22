@@ -1,0 +1,28 @@
+font-family = JetBrainsMono Nerd Font Mono
+font-size = 24
+font-feature = -calt
+font-feature = -liga
+font-feature = -clig
+font-feature = -dlig
+
+cursor-style = block
+cursor-style-blink = false
+shell-integration-features = no-cursor
+mouse-scroll-multiplier = precision:2,discrete:3
+
+window-decoration = none
+maximize = true
+fullscreen = false
+window-padding-x = 0
+window-padding-y = 0
+window-padding-color = background
+scrollbar = never
+macos-window-shadow = false
+
+background = #000000
+background-opacity = 0.94
+background-opacity-cells = true
+bell-features = no-system,no-audio,attention,title,no-border
+
+keybind = super+shift+o=toggle_background_opacity
+config-file = ?palette.ghostty
